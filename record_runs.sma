@@ -146,11 +146,6 @@ public plugin_end(){
 	TrieDestroy(g_tRecords);
 }
 
-public timer_db_loaded()
-{
-	set_task(3.0, "load_records");
-}
-
 public player_spawned(id)
 {
 	ArrayClear(g_aPlayerFrames[id]);
