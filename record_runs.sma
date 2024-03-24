@@ -57,7 +57,7 @@ public plugin_precache()
 	precache_model("models/llg/v_butcher.mdl");
 
 	precache_generic("models/player/robot/robot.mdl");
-	precache_generic("models/player/robotT/robotT.mdl");
+	precache_generic("models/player/robot/robotT.mdl");
 }
 
 public reset_model(id, level, cid)
@@ -158,6 +158,10 @@ public plugin_end(){
 	}
 
 	TrieDestroy(g_tRecords);
+}
+
+public client_putinserver(id) {
+	update_sourcename(id);
 }
 
 public player_spawned(id)
