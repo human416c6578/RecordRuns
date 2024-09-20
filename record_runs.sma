@@ -4,8 +4,6 @@
 #include <fun>
 #include <cstrike>
 #include <engine>
-#include <json>
-#include <easy_http>
 #include <get_user_fps>
 #include <strafe_stats>
 #include <globals>

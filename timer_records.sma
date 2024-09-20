@@ -21,7 +21,7 @@ public plugin_init()
 {
 	// 0 - local | 1 - webserver
 	g_cStorageType = register_cvar("bot_storage_type", "1");
-	g_cStorageUrl = register_cvar("bot_storage_url", "https://cs-gfx.eu/uploads/recording");
+	g_cStorageUrl = register_cvar("bot_storage_url", "");
 
 }
 
