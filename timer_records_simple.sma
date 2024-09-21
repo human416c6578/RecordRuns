@@ -33,19 +33,21 @@ public plugin_cfg()
 		mkdir(g_szDirectory)
 	}
 
-	set_task(3.0, "load_records");
+	set_task(1.0, "load_records");
 }
 
 public fwPlayerFinished(id, iTime, record) {
-	if(!record)
-		return;
+    if(!record)
+        return;
 
-	new szTime[32], szCategory[32], path[128];
+    new szTime[32], szInfo[32], path[128];
 
-	get_formated_time(iTime, szTime, charsmax(szTime));
+    // Get the formatted time for the player's finish time
+    get_formated_time(iTime, szTime, charsmax(szTime));
 
-	format(path, charsmax(path), "%s/%s.rec", g_szDirectory, "Record");
-	save_record(id, szTime, szCategory, path);
+    // Save the new record at the correct spot
+    format(path, charsmax(path), "%s/Record.rec", g_szDirectory);
+    save_record(id, szTime, szInfo, path);
 }
 
 
@@ -56,15 +58,19 @@ public fwPlayerStarted(id){
 
 public load_records()
 {
-	new path[128];
-
+	new path[128], replay[128];
+	
 	new dp = open_dir(g_szDirectory, path, charsmax(path));
 	
 	if(!dp) return;
+	formatex(replay, charsmax(replay), "%s/%s", g_szDirectory, path);
+	load_record(replay);
  
 	while(next_file(dp, path, charsmax(path)))
 	{	
-		load_record(path);
+		formatex(replay, charsmax(replay), "%s/%s", g_szDirectory, path);
+		server_print("%s", replay);
+		load_record(replay);
 	}
  
 	close_dir(dp);
