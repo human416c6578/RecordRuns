@@ -64,8 +64,8 @@ stock load_record(filename[128], id = -1)
 		// Read speed (short)
 		fread(file, speed, BLOCK_SHORT);
 
-		velocity[0] = floatsqroot(speed);
-		velocity[1] = velocity[0];
+		velocity[0] = speed * 0.5;
+		velocity[1] = speed * 0.5;
 		velocity[2] = 0.0;
 		temp_frame[frame_velocity] = velocity;
 
