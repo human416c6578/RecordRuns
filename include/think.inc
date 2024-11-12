@@ -27,8 +27,8 @@ public botThink( id )
 			}
 		}
 		
-		new bool:onground = g_BotData[current_frame_data][frame_velocity][2] == 0.0 ? true : false
-		animate_legs(id, g_BotData[current_frame_data][frame_buttons], onground);
+		//new bool:onground = g_BotData[current_frame_data][frame_velocity][2] == 0.0 ? true : false
+		//animate_legs(id, g_BotData[current_frame_data][frame_buttons], onground);
 		entity_set_int(id, EV_INT_button, g_BotData[current_frame_data][frame_buttons]);
 		set_user_fps(id, g_BotData[current_frame_data][frame_fps]);
 		
@@ -103,6 +103,7 @@ public botSmooth(id){
 
 		set_pev( id, pev_movetype, MOVETYPE_NONE);
 		set_pev(id, pev_solid, SOLID_NOT)
+
 		set_pev( id, pev_velocity, g_BotData[current_frame_data][frame_velocity] );
 
 		entity_set_origin(id, origin);

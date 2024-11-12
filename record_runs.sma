@@ -238,6 +238,7 @@ public record_player( id )
 	pev(id, pev_origin, 	temp_data[frame_origin]);
 	pev(id, pev_v_angle, 	temp_data[frame_angles]);
 	pev(id, pev_velocity,  	temp_data[frame_velocity]);
+
 	temp_data[frame_gravity] = get_user_gravity(id);
 	temp_data[frame_fps] = get_user_fps(id);
 	temp_data[frame_strafes] = get_user_strafes(id);
