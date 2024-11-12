@@ -75,7 +75,7 @@ stock load_record(filename[128], id = -1)
 		// Read packed byte for gravity, strafes, and sync
 		fread(file, packed_byte, BLOCK_CHAR);
 		temp_frame[frame_gravity] = (packed_byte & 0x80) ? 1.0 : 0.5;
-		temp_frame[frame_strafes] = packed_byte & 0x0F;
+		temp_frame[frame_strafes] = packed_byte & 0x7F;
 
 		fread(file, temp_frame[frame_sync], BLOCK_CHAR);
 
@@ -167,7 +167,7 @@ stock save_record(id, demo_time[32], demo_name[32], demo_path[128])
 
 		// Pack gravity and strafes into a single byte
 		temp_gravity = temp_frame[frame_gravity] > 0.9 ? 1 : 0;
-		packed_byte = (temp_gravity << 7) | (temp_frame[frame_strafes] & 0xF);
+		packed_byte = (temp_gravity << 7) | (temp_frame[frame_strafes] & 0x7F);
 		fwrite(file, packed_byte, BLOCK_CHAR);
 
 		fwrite(file, temp_frame[frame_sync], BLOCK_CHAR);
