@@ -127,7 +127,7 @@ stock save_record(id, demo_time[32], demo_name[32], demo_path[128])
 	new Array:array = g_aPlayerFrames[id];
 	new arrsize = ArraySize(array);
 	new temp_frame[eFrameData];
-	new Float:temp_speed, temp_gravity, scaled_origin[3], scaled_yaw, scaled_pitch, packed_byte;
+	new temp_speed, temp_gravity, scaled_origin[3], scaled_yaw, scaled_pitch, packed_byte;
 
 	// Iterate through each frame
 	for (new i = 0; i < arrsize; i++) {
@@ -161,7 +161,7 @@ stock save_record(id, demo_time[32], demo_name[32], demo_path[128])
 		fwrite(file, scaled_yaw, BLOCK_SHORT);
 		fwrite(file, scaled_pitch, BLOCK_SHORT);
 
-		temp_speed = floatsqroot(floatpower(temp_frame[frame_velocity][0], 2.0) + floatpower(temp_frame[frame_velocity][1], 2.0));
+		temp_speed = round(floatsqroot(floatpower(temp_frame[frame_velocity][0], 2.0) + floatpower(temp_frame[frame_velocity][1], 2.0)));
 		fwrite(file, temp_speed, BLOCK_SHORT);
 
 		// Write buttons as short
