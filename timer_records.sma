@@ -126,27 +126,35 @@ public get_file(filename[])
 
 public http_get_file_complete(EzHttpRequest:request_id)
 {
-	if (ezhttp_get_error_code(request_id) != EZH_OK)
-	{
-		new error[64]
-		ezhttp_get_error_message(request_id, error, charsmax(error))
-		server_print("Response error: %s", error);
-		return
-	}
-	
-	new url[256];
-	ezhttp_get_url(request_id, url, charsmax(url));
+    // Check if there's an error in the response
+    if (ezhttp_get_error_code(request_id) != EZH_OK)
+    {
+        new error[64];
+        ezhttp_get_error_message(request_id, error, charsmax(error));
+        server_print("Response error: %s", error);
+        return;
+    }
 
-	if(!dir_exists("addons/amxmodx/data/temp"))
-		mkdir("addons/amxmodx/data/temp");
+    // Check for HTTP status code 404
+    if (ezhttp_get_http_code(request_id) == 404)
+    {
+        server_print("Error: File not found (404)");
+        return;
+    }
 
-	new filepath[128];
-	format(filepath, charsmax(filepath), "addons/amxmodx/request_%d.json", request_id);
-	ezhttp_save_data_to_file(request_id, filepath);
+    new url[256];
+    ezhttp_get_url(request_id, url, charsmax(url));
 
-	load_record(filepath);
+    if(!dir_exists("addons/amxmodx/data/temp"))
+        mkdir("addons/amxmodx/data/temp");
 
-	delete_file(filepath);
+    new filepath[128];
+    format(filepath, charsmax(filepath), "addons/amxmodx/request_%d.json", request_id);
+    ezhttp_save_data_to_file(request_id, filepath);
+
+    load_record(filepath);
+
+    delete_file(filepath);
 }
 
 stock ExplodeString( p_szOutput[][], p_nMax, p_nSize, p_szInput[], p_szDelimiter )

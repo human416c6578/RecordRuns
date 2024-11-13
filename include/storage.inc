@@ -38,9 +38,11 @@ stock load_record(filename[128], id = -1)
 	new temp_frame[eFrameData];
 	new scaled_origin[3];
 	new scaled_angles[2];
-	new Float:speed;
+	new temp_speed;
 	new Float:velocity[3];
 	new packed_byte, fps;
+
+	new Float:INV_SQRT_2 = 0.70710678;
 
 	// Read frame data
 	while (!feof(file)) {
@@ -62,10 +64,10 @@ stock load_record(filename[128], id = -1)
 		temp_frame[frame_angles][2] = 0.0;
 
 		// Read speed (short)
-		fread(file, speed, BLOCK_SHORT);
+		fread(file, temp_speed, BLOCK_SHORT);
 
-		velocity[0] = speed * 0.5;
-		velocity[1] = speed * 0.5;
+		velocity[0] = float(temp_speed) * INV_SQRT_2;
+		velocity[1] = float(temp_speed) * INV_SQRT_2;
 		velocity[2] = 0.0;
 		temp_frame[frame_velocity] = velocity;
 
