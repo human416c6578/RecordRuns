@@ -54,12 +54,12 @@ public timer_player_record(id) {
 	new szTime[32], szCategory[32], path[128];
 	new iTime = get_user_best(id);
 
-	get_formated_time(iTime, szTime, charsmax(szTime));
+	//get_formated_time(iTime, szTime, charsmax(szTime));
 	get_user_category(id, szCategory, charsmax(szCategory));
 	format(szCategory, charsmax(szCategory), "[%s]", szCategory);
 
 	format(path, charsmax(path), "%s/%s.rec", g_szDirectory, szCategory);
-	save_record(id, szTime, szCategory, path);
+	save_record(id, path, iTime, szCategory);
 
 	// write what replays the external script should grab
 	new szReplaysFilepath[128], string[128];
@@ -98,7 +98,8 @@ public load_records_local()
 	for(new i=0;i<=categories_count;i++)
 	{
 		format(path, charsmax(path), "%s/[%s].rec", g_szDirectory, categories[i]);
-		load_record(path);
+		if(file_exists(path))
+			load_record(path);
 	}
 }
 

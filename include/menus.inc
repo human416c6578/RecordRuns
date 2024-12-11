@@ -14,7 +14,7 @@ public bot_menu(id)
 	
 	menu_additem( menu, "\wPause/Unpause Bot", "2", ADMIN_BAN);
 	menu_additem( menu, "\wStop Bot", "3", ADMIN_BAN);
-	format(text, charsmax(text), "\wReplay Speed: %.2fx", g_BotData[frametime_def] / g_BotData[frametime]);
+	format(text, charsmax(text), "\wReplay Speed: %.2fx", 1.0 / float(g_BotData[slow]));
 	menu_additem( menu, text, "4", ADMIN_BAN);
 	menu_additem( menu, "\wFast forward", "5", ADMIN_BAN);	
 	menu_additem( menu, "\wFast backward", "6", ADMIN_BAN);
@@ -40,7 +40,7 @@ public bot_handle(id, menu, item)
 	{
 		case 0:
 		{		
-			g_BotData[current_frame] = 0;
+			SetCurrentReplay(g_BotData[current_source])
 			g_BotData[paused] = false;
 		}
 		case 1:
@@ -49,31 +49,22 @@ public bot_handle(id, menu, item)
 		}
 		case 2:
 		{		
-			g_BotData[current_frame] = 0;
+			SetCurrentReplay(g_BotData[current_source])
 			g_BotData[paused] = true;
 		}
 		case 3:
 		{		
-			g_BotData[frametime] *= 2.0;
-			if(g_BotData[frametime] > g_BotData[frametime_def] * 4.0)
-				g_BotData[frametime] = g_BotData[frametime_def];
+			g_BotData[slow] *= 2;
+			if(g_BotData[slow] > 4)
+				g_BotData[slow] = 1;
 		}
 		case 4:
 		{
-			g_BotData[current_frame] += 157;
-			if(g_BotData[current_frame] > g_BotData[current_source_size])
-			{
-				g_BotData[current_frame] = 0;
-			}
+			SkipFrames(157);
 		}
 		case 5:
 		{
-			g_BotData[current_frame] -= 157;
-			
-			if(g_BotData[current_frame] < 0)
-			{
-				g_BotData[current_frame] = 0;
-			}
+			SkipFrames(-157);
 		}
 		case 6:
 		{
@@ -145,16 +136,14 @@ public records_menu(id){
 	new menu = menu_create( szMenuTitle, "records_handle" );
 	new text[64];
 	new szNum[8];
-	new sourceCategory[128];
-	new sourcePath[128];
 
-	for(new i=0; i < g_iSourcesCount; i++){
-		format(sourceCategory, charsmax(sourceCategory), g_BotSources[i][source_category]);
-		format(sourcePath, charsmax(sourcePath), g_BotSources[i][source_path]);
-		if (g_bLEGITMenu[id] && containi(sourceCategory, "LEGIT") != -1 || !g_bLEGITMenu[id] && containi(sourceCategory, "LEGIT") == -1) {
+	for(new i=0; i < ArraySize(g_Replays); i++){
+		new replay[eHeader];
+		ArrayGetArray(g_Replays, i, replay);
+		if (g_bLEGITMenu[id] && containi(replay[hInfo], "LEGIT") != -1 || !g_bLEGITMenu[id] && containi(replay[hInfo], "LEGIT") == -1) {
 			
 			// Add the record to the menu
-			formatex(text, 63, "\r%s \w- %s [\y%s\w]", g_BotSources[i][source_category], g_BotSources[i][source_name], g_BotSources[i][source_time]);
+			formatex(text, 63, "\r%s \w- %s [\y%s\w]", replay[hInfo], replay[hName], replay[hTime]);
 			format(szNum, charsmax(szNum), "%d", i);
 			menu_additem( menu, text, szNum);
 		}
@@ -177,12 +166,6 @@ public records_handle(id, menu, item){
 	menu_item_getinfo(menu, item, access, szNum, charsmax(szNum))
 	
 	g_BotData[current_source] = str_to_num(szNum);
-	g_BotData[current_frame] = 0;
-
-	g_BotData[current_source_size] = ArraySize(g_BotSources[g_BotData[current_source]][source_array]) - 1;
-
-	g_BotData[frametime_def] = 1.0 / ((g_BotData[current_source_size] - g_iFrmsBeforeStart) / str_to_time(g_BotSources[g_BotData[current_source]][source_time]));
-	g_BotData[frametime] = g_BotData[frametime_def];
 
 	for(new i = 1;i<33;i++)
 		update_sourcename(i);

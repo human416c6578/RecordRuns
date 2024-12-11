@@ -115,8 +115,11 @@ stock set_user_fake_name(const id, const name[])
 stock update_sourcename( id )
 {
 	if(!is_user_connected(id)) return;
+	if(ArraySize(g_Replays) == 0) return;
 	new sz_name[128]
-	format(sz_name, charsmax(sz_name), "%s %s %s", g_BotSources[g_BotData[current_source]][source_category], g_BotSources[g_BotData[current_source]][source_name], g_BotSources[g_BotData[current_source]][source_time]);
+	new replay[eHeader];
+	ArrayGetArray(g_Replays, g_BotData[current_source], replay);
+	format(sz_name, charsmax(sz_name), "%s %s %s", replay[hInfo], replay[hName], replay[hTime]);
 	set_user_fake_name(id, sz_name);	
 }
 
@@ -133,14 +136,6 @@ stock Float:str_to_time(time[]){
 	s += str_to_float(exploded2[0]);
 	s += str_to_float(exploded2[1]) / 1000.0;
 	return s;
-}
-
-stock delete_source(source[eSourceData]){
-	source[source_name] = 0;
-	source[source_time] = 0;
-	source[source_category] = 0;
-	source[source_path] = 0;
-	source[source_array] = _:ArrayCreate( eFrameData );
 }
 
 
