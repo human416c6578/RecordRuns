@@ -60,11 +60,11 @@ public bot_handle(id, menu, item)
 		}
 		case 4:
 		{
-			SkipFrames(157);
+			g_BotData[current_frame] += 157;
 		}
 		case 5:
 		{
-			SkipFrames(-157);
+			g_BotData[current_frame] -= 157;
 		}
 		case 6:
 		{
@@ -136,6 +136,7 @@ public records_menu(id){
 	new menu = menu_create( szMenuTitle, "records_handle" );
 	new text[64];
 	new szNum[8];
+	new szTime[32];
 
 	for(new i=0; i < ArraySize(g_Replays); i++){
 		new replay[eHeader];
@@ -143,7 +144,8 @@ public records_menu(id){
 		if (g_bLEGITMenu[id] && containi(replay[hInfo], "LEGIT") != -1 || !g_bLEGITMenu[id] && containi(replay[hInfo], "LEGIT") == -1) {
 			
 			// Add the record to the menu
-			formatex(text, 63, "\r%s \w- %s [\y%s\w]", replay[hInfo], replay[hName], replay[hTime]);
+			get_formated_time(replay[hTime], szTime, charsmax(szTime));
+			formatex(text, 63, "\r%s \w- %s [\y%s\w]", replay[hInfo], replay[hName], szTime);
 			format(szNum, charsmax(szNum), "%d", i);
 			menu_additem( menu, text, szNum);
 		}
@@ -166,6 +168,8 @@ public records_handle(id, menu, item){
 	menu_item_getinfo(menu, item, access, szNum, charsmax(szNum))
 	
 	g_BotData[current_source] = str_to_num(szNum);
+	g_BotData[current_frame] = 0;
+	SetCurrentReplay(g_BotData[current_source]);
 
 	for(new i = 1;i<33;i++)
 		update_sourcename(i);

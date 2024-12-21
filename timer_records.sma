@@ -21,7 +21,7 @@ public plugin_init()
 {
 	// 0 - local | 1 - webserver
 	g_cStorageType = register_cvar("bot_storage_type", "1");
-	g_cStorageUrl = register_cvar("bot_storage_url", "");
+	g_cStorageUrl = register_cvar("bot_storage_url", "http://cs-gfx.eu/uploads/recording");
 
 }
 
@@ -32,6 +32,7 @@ public plugin_cfg()
 	get_localinfo( "amxx_datadir", g_szDirectory, charsmax( g_szDirectory ) );
 	format(g_szDirectory, charsmax(g_szDirectory), "%s/%s", g_szDirectory, rec_foldername)
 	get_mapname(g_szMapName, 63);
+	strtolower(g_szMapName);
 
 	if(!dir_exists(g_szDirectory))
 	{
@@ -51,10 +52,9 @@ public timer_db_loaded()
 }
 
 public timer_player_record(id) {
-	new szTime[32], szCategory[32], path[128];
+	new szCategory[32], path[128];
 	new iTime = get_user_best(id);
 
-	//get_formated_time(iTime, szTime, charsmax(szTime));
 	get_user_category(id, szCategory, charsmax(szCategory));
 	format(szCategory, charsmax(szCategory), "[%s]", szCategory);
 
@@ -75,9 +75,12 @@ public timer_player_record(id) {
 	}
 }
 
-
 public timer_player_started(id){
-	reset_record(id);
+	start_record(id);
+}
+
+public timer_player_finished(id) {
+	stop_record(id);
 }
 
 public load_records(){

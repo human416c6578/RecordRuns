@@ -6,6 +6,7 @@ new Array:g_Replays;
 
 enum eBotData
 {
+	current_frame,
 	current_source,
 	bool:paused,
 	current_counter,

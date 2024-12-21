@@ -116,11 +116,13 @@ stock update_sourcename( id )
 {
 	if(!is_user_connected(id)) return;
 	if(ArraySize(g_Replays) == 0) return;
-	new sz_name[128]
+	new szName[64]
+	new szTime[32];
 	new replay[eHeader];
 	ArrayGetArray(g_Replays, g_BotData[current_source], replay);
-	format(sz_name, charsmax(sz_name), "%s %s %s", replay[hInfo], replay[hName], replay[hTime]);
-	set_user_fake_name(id, sz_name);	
+	get_formated_time(replay[hTime], szTime, charsmax(szTime));
+	format(szName, charsmax(szName), "%s %s %s", replay[hInfo], replay[hName], szTime);
+	set_user_fake_name(id, szName);	
 }
 
 stock Float:str_to_time(time[]){

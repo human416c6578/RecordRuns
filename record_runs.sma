@@ -16,7 +16,6 @@
 #define VERSION "1.0"
 #define AUTHOR "MrShark45"
 
-
 public plugin_init() 
 {
 	register_plugin(PLUGIN, VERSION, AUTHOR);
@@ -30,9 +29,12 @@ public plugin_init()
 	set_pev( ent, pev_nextthink, get_gametime() + 1.0 );
 	RegisterHam( Ham_Think, "info_target", "entities_think", 1 );
 	
-
 	ent = fm_create_entity("info_target");
 	set_pev(ent, pev_classname, "bot_playback");
+	set_pev(ent, pev_nextthink, get_gametime() + 1.0);
+
+	ent = fm_create_entity("info_target");
+	set_pev(ent, pev_classname, "bot_smooth");
 	set_pev(ent, pev_nextthink, get_gametime() + 1.0);
 
 	set_task(0.5, "check_spectators", TASK_SPECTATORS, _, _, "b");
@@ -63,7 +65,8 @@ public plugin_natives()
 	register_library("record_runs");
 
 	register_native("open_bot_menu", "open_bot_menu_native");
-	register_native("reset_record", "reset_record_native");
+	register_native("start_record", "start_record_native");
+	register_native("stop_record", "stop_record_native");
 	register_native("save_record", "save_record_native");
 	register_native("load_record", "load_record_native");
 }
@@ -73,10 +76,16 @@ public open_bot_menu_native(numParams){
 	bot_menu(id);
 }
 
-public reset_record_native(numParams) {
+public start_record_native(numParams) {
 	new id = get_param(1);
 
 	StartRecord(id);
+}
+
+public stop_record_native(numParams) {
+	new id = get_param(1);
+
+	StopRecord(id);
 }
 
 public save_record_native(numParams) {
@@ -98,6 +107,19 @@ public save_record_native(numParams) {
 	get_user_authid(id, demo_authid, charsmax(demo_authid));
 
 	SaveReplay(demo_path, id, demo_map, demo_authid, demo_info, demo_time);
+	
+	new header[eHeader];
+	for(new i=0;i<ArraySize(g_Replays);i++) {
+		ArrayGetArray(g_Replays, i, header);
+		if(equali(header[hInfo], demo_info))
+		{
+			ArrayDeleteItem(g_Replays, i);
+			DeleteReplay(i);
+		}
+	}
+	LoadReplay(0, demo_path, header);
+	ArrayPushArray(g_Replays, header);
+	
 }
 
 public load_record_native(numParams) {
@@ -136,15 +158,20 @@ public create_bot()
 	g_iBot = makebot("Record Bot");
 }
 
-
 public entities_think( ent )
 {	
 	static classname[64]
 	pev(ent, pev_classname, classname, 63);
+	static Float:fFrameTime;
 
 	if(equal(classname, "bot_playback")){
-		new Float:nextframe = botThink( g_iBot ) * float(g_BotData[slow]);
-		set_pev( ent, pev_nextthink, get_gametime() + nextframe );
+		fFrameTime = botThink( g_iBot ) * float(g_BotData[slow]);
+		
+		set_pev( ent, pev_nextthink, get_gametime() + fFrameTime );
+	}
+	else if(equal(classname, "bot_smooth")){
+		botSmooth( g_iBot );
+		set_pev( ent, pev_nextthink, get_gametime() + fFrameTime / 5.0 );
 	}
 }
 
