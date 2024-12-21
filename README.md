@@ -3,6 +3,8 @@
 ## Description
 The **Record Runs** plugin for AMX Mod X is designed to record and playback player movements in Counter-Strike 1.6. It allows server administrators to capture and review player runs, which can be useful for analyzing gameplay, creating tutorials, or showcasing exceptional performances.
 
+Dependent on the following module: https://github.com/human416c6578/ReplaysModule
+
 **Note:** This plugin is not intended for standalone use. It requires integration with other plugins and can be controlled using native functions.
 
 ## Features
