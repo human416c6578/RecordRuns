@@ -41,6 +41,7 @@ public bot_handle(id, menu, item)
 		case 0:
 		{		
 			SetCurrentReplay(g_BotData[current_source])
+			g_BotData[current_frame] = 0;
 			g_BotData[paused] = false;
 		}
 		case 1:
@@ -61,10 +62,14 @@ public bot_handle(id, menu, item)
 		case 4:
 		{
 			g_BotData[current_frame] += 157;
+			if(g_BotData[current_frame] > GetReplaySize() - 1)
+				g_BotData[current_frame] = 0;
 		}
 		case 5:
 		{
 			g_BotData[current_frame] -= 157;
+			if(g_BotData[current_frame] < 0)
+				g_BotData[current_frame] = 0;
 		}
 		case 6:
 		{
