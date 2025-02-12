@@ -111,7 +111,7 @@ public load_records_local()
 public load_records_webserver()
 {
 	new data[1024];
-	new categories[32][32];
+	new categories[MAX_CATEGORIES][32];
 	get_categories_enabled(data, charsmax(data));
 	
 	new categories_count = ExplodeString( categories, 32, 31, data, ',' );
