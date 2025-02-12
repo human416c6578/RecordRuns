@@ -7,6 +7,8 @@
 #define VERSION "1.0"
 #define AUTHOR "MrShark45"
 
+#define MAX_CATEGORIES 40
+
 new const rec_foldername[10] = "recording";
 
 new g_cStorageType;
@@ -93,11 +95,11 @@ public load_records(){
 public load_records_local()
 {
 	new data[1024];
-	new categories[32][32];
+	new categories[MAX_CATEGORIES][32];
 	new path[128];
 	get_categories_enabled(data, charsmax(data));
 	
-	new categories_count = ExplodeString( categories, 32, 31, data, ',' );
+	new categories_count = ExplodeString( categories, MAX_CATEGORIES, 31, data, ',' );
 	for(new i=0;i<=categories_count;i++)
 	{
 		format(path, charsmax(path), "%s/[%s].rec", g_szDirectory, categories[i]);
