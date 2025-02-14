@@ -95,11 +95,11 @@ public load_records(){
 public load_records_local()
 {
 	new data[1024];
-	new categories[MAX_CATEGORIES][32];
+	new categories[MAX_CATEGORIES][64];
 	new path[128];
 	get_categories_enabled(data, charsmax(data));
 	
-	new categories_count = ExplodeString( categories, MAX_CATEGORIES, 31, data, ',' );
+	new categories_count = ExplodeString( categories, MAX_CATEGORIES, 63, data, ',' );
 	for(new i=0;i<=categories_count;i++)
 	{
 		format(path, charsmax(path), "%s/[%s].rec", g_szDirectory, categories[i]);
@@ -111,10 +111,10 @@ public load_records_local()
 public load_records_webserver()
 {
 	new data[1024];
-	new categories[MAX_CATEGORIES][32];
+	new categories[MAX_CATEGORIES][64];
 	get_categories_enabled(data, charsmax(data));
 	
-	new categories_count = ExplodeString( categories, 32, 31, data, ',' );
+	new categories_count = ExplodeString( categories, MAX_CATEGORIES, 63, data, ',' );
 	for(new i=0;i<=categories_count;i++)
 	{
 		replace_string(categories[i], charsmax(categories[]), " ", "%20");

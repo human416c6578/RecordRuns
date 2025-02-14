@@ -16,3 +16,5 @@ enum eBotData
 }
 
 new g_BotData[eBotData];
+
+new g_fwdOpenSourcesMenu;

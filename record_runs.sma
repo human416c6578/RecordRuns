@@ -39,7 +39,7 @@ public plugin_init()
 
 	set_task(0.5, "check_spectators", TASK_SPECTATORS, _, _, "b");
 
-
+	g_fwdOpenSourcesMenu = CreateMultiForward("record_runs_open_menu", ET_IGNORE, FP_CELL, FP_CELL);
 }
 
 public plugin_precache()
@@ -56,6 +56,18 @@ public plugin_natives()
 	register_native("stop_record", "stop_record_native");
 	register_native("save_record", "save_record_native");
 	register_native("load_record", "load_record_native");
+	register_native("set_current_replay", "set_current_replay_native");
+}
+
+public set_current_replay_native(numParams)
+{
+	new id = get_param(1);
+	g_BotData[current_source] = id;
+	g_BotData[current_frame] = 0;
+	SetCurrentReplay(id);
+
+	for(new i = 1;i<33;i++)
+		update_sourcename(i);
 }
 
 public open_bot_menu_native(numParams){
