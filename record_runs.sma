@@ -39,25 +39,12 @@ public plugin_init()
 
 	set_task(0.5, "check_spectators", TASK_SPECTATORS, _, _, "b");
 
-	register_event("ResetHUD", "reset_model", "b");
 
 }
 
 public plugin_precache()
 {
 	precache_model("models/llg/v_butcher.mdl");
-
-	precache_generic("models/player/robot/robot.mdl");
-	precache_generic("models/player/robot/robotT.mdl");
-}
-
-public reset_model(id, level, cid)
-{
-	if(id != g_iBot || !is_user_connected(g_iBot)) return PLUGIN_CONTINUE;
-	
-	cs_set_user_model(id, "robot");
-
-	return PLUGIN_CONTINUE;
 }
 
 public plugin_natives()
