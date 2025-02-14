@@ -144,7 +144,7 @@ public http_get_file_complete(EzHttpRequest:request_id)
     // Check for HTTP status code 404
     if (ezhttp_get_http_code(request_id) == 404)
     {
-        server_print("Error: File not found (404)");
+        //server_print("Error: File not found (404)");
         return;
     }
 
