@@ -253,6 +253,8 @@ public source_handler(id, menu, item){
 	new sourceId = str_to_num(itemInfo)
 	set_current_replay(sourceId);
 	
+	menu_destroy(menu);
+	ShowSourcesMenu(id);
 
 	return PLUGIN_HANDLED;
 }
