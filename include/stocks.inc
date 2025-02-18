@@ -242,3 +242,7 @@ stock bool:GetButton(id, button){
 stock get_formated_time(iTime, szTime[], size){
 	formatex(szTime, size, "%d:%02d.%03ds", iTime/60000, (iTime/1000)%60, iTime%1000);
 }
+
+stock Float:lerp(Float:v0, Float:v1, Float:t) {
+  return ((1 - t) * v0) + (t * v1);
+}
