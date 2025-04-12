@@ -32,6 +32,23 @@ enum eCategoryInfo{
 new Array:g_aSourcesArray;
 new Array:g_aCategories;
 
+enum eCategorySet{
+	bool:eBhop,
+	bool:eSR,
+	bool:eOthers
+}
+
+enum eCategoryGravitySubset{
+	bool:eNormal,
+	bool:eLowGravity
+}
+
+new g_bCategory[eCategorySet];
+new g_iCategoryTypes;
+
+new g_bCategoryGravity[eCategoryGravitySubset];
+new g_iCategoryGravityTypes;
+
 new g_iMenuSelect[MAX_PLAYERS][eMenuOption];
 
 public plugin_init()
@@ -43,6 +60,7 @@ public plugin_init()
 public timer_db_loaded()
 {
 	g_aCategories = get_categories_array();
+	CheckCategoriesEnabled();
 }
 
 public record_runs_open_menu(id, Array:array)
@@ -51,23 +69,64 @@ public record_runs_open_menu(id, Array:array)
 	ShowSourcesMenu(id);
 }
 
+public CheckCategoriesEnabled()
+{
+	new cat[eCategoryInfo];
+	for(new i=0;i<ArraySize(g_aCategories);i++){
+		ArrayGetArray(g_aCategories, i, cat);
+
+		if(!cat[eRuleSpeedrun])
+			g_bCategory[eBhop] = true;
+		
+		if(cat[eRuleSpeedrun])
+			g_bCategory[eSR] = true;
+
+		if(!cat[eRuleAutoBhop])
+			g_bCategory[eOthers] = true;
+
+		if(cat[eRuleGravity] > 0.0)
+			g_bCategoryGravity[eNormal] = true;
+
+		if(cat[eRuleGravity] == 0.0)
+			g_bCategoryGravity[eLowGravity] = true;
+	}
+
+	g_iCategoryTypes = _:g_bCategory[eBhop] + _:g_bCategory[eSR] + _:g_bCategory[eOthers];
+	g_iCategoryGravityTypes = _:g_bCategoryGravity[eNormal] + _:g_bCategoryGravity[eLowGravity];
+	
+	//server_print("CategoryTypes ENABLED: %d", g_iCategoryTypes);
+	//server_print("CategoryGravityTypes ENABLED: %d", g_iCategoryGravityTypes);
+}
+
 
 public ShowSourcesMenu(id){
+	if(g_iCategoryTypes == 1)
+	{
+		g_iMenuSelect[id][eMenuBhop] = g_bCategory[eBhop];
+		SourcesGravityMenu(id);
+
+		return PLUGIN_CONTINUE;
+	}
+
 	new szTitle[128];
 	formatex(szTitle, charsmax(szTitle), "\r[FWO] \d- \wSources Menu");
 
 	new menu = menu_create(szTitle, "sources_select_handler");
 
-	menu_additem(menu, "\wBhop", "", 0);
-	menu_additem(menu, "\wSpeedrun", "", 0);
-	menu_additem(menu, "\wOthers", "", 0);
+	if(g_bCategory[eBhop])
+		menu_additem(menu, "\wBhop", "1", 0);
+
+	if(g_bCategory[eSR])
+		menu_additem(menu, "\wSpeedrun", "2", 0);
+
+	if(g_bCategory[eOthers])
+		menu_additem(menu, "\wOthers", "3", 0);
 
 	menu_setprop(menu, MPROP_EXIT, MEXIT_ALL);
 
 	menu_display(id, menu, 0);
 
 	return PLUGIN_CONTINUE;
-	
 }
 
 public sources_select_handler(id, menu, item){
@@ -77,22 +136,25 @@ public sources_select_handler(id, menu, item){
 		return PLUGIN_CONTINUE;
 	}
 
-	switch(item)
+	new info[32];
+	menu_item_getinfo(menu, item, _, info, charsmax(info), _, _, _);
+
+	new set = str_to_num(info);
+
+	switch(set)
 	{
-		case 0:
+		case 1:
 		{
 			g_iMenuSelect[id][eMenuBhop] = true;
 			SourcesGravityMenu(id);
 		}
-		case 1:
+		case 2:
 		{
 			g_iMenuSelect[id][eMenuBhop] = false;
 			SourcesGravityMenu(id);
 		}
-		case 2:
-		{
-			SourcesOtherMenu(id); // Here you can just set category as KZ
-		}
+		case 3:
+			SourcesOtherMenu(id);
 	}
 
 	menu_destroy(menu);
@@ -100,6 +162,14 @@ public sources_select_handler(id, menu, item){
 }
 
 public SourcesGravityMenu(id){
+	if(g_iCategoryGravityTypes == 1)
+	{
+		g_iMenuSelect[id][eMenuGravity] = !g_bCategoryGravity[eNormal];
+		SelectSource(id);
+
+		return PLUGIN_CONTINUE;
+	}
+
 	new szTitle[128];
 	formatex(szTitle, charsmax(szTitle), "\r[FWO] \d- \wSources Menu");
 
@@ -119,7 +189,8 @@ public surces_gravity_menu_handler(id, menu, item){
 	if (item == MENU_EXIT)
 	{
 		menu_destroy(menu);
-		ShowSourcesMenu(id);
+		if(g_iCategoryTypes > 1)
+			ShowSourcesMenu(id);
 		return PLUGIN_CONTINUE;
 	}
 
@@ -246,7 +317,10 @@ public source_handler(id, menu, item){
 	if(str_to_num(itemInfo) == -3 || item == MENU_EXIT)
 	{
 		menu_destroy(menu);
-		SourcesGravityMenu(id);
+		if(g_iCategoryGravityTypes > 1)
+			SourcesGravityMenu(id);
+		else if(g_iCategoryTypes > 1)
+			ShowSourcesMenu(id);
 		return PLUGIN_CONTINUE;
 	}
 
