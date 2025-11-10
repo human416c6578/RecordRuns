@@ -6,7 +6,6 @@
 #include <engine>
 #include <replays>
 #include <get_user_fps>
-#include <strafe_stats>
 #include <globals>
 #include <stocks>
 #include <menus>

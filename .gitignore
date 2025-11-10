@@ -21,5 +21,6 @@ pawn.lock
 settings.json
 tasks.json
 .vscode/*.json
+kz*
 
 # End of https://www.toptal.com/developers/gitignore/api/pawn

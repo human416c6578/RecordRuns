@@ -25,6 +25,7 @@ enum eCategoryInfo{
 	eRuleAutoBhop,
 	eRuleSpeedrun,
 	eRuleHook,
+	Float:eRuleAirAcc,
 	eRecordTime,
 	eDisplay[32]
 };
@@ -94,8 +95,8 @@ public CheckCategoriesEnabled()
 	g_iCategoryTypes = _:g_bCategory[eBhop] + _:g_bCategory[eSR] + _:g_bCategory[eOthers];
 	g_iCategoryGravityTypes = _:g_bCategoryGravity[eNormal] + _:g_bCategoryGravity[eLowGravity];
 	
-	//server_print("CategoryTypes ENABLED: %d", g_iCategoryTypes);
-	//server_print("CategoryGravityTypes ENABLED: %d", g_iCategoryGravityTypes);
+	// server_print("CategoryTypes ENABLED: %d", g_iCategoryTypes);
+	// server_print("CategoryGravityTypes ENABLED: %d", g_iCategoryGravityTypes);
 }
 
 
